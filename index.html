@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			background-color: #Dcf7dc;
+		}
+		#container
+		{
+			/*border: solid 1px green;*/
+			display: grid;
+			grid-template-columns: repeat(9,11%);
+			margin-left: 35%;
+			margin-right: 35%;
+			margin-top: 10%;
+		}
+		input
+		{
+			height:40px;
+			text-align: center;
+			font-size: 130%;
+			background-color: #6DDED8;
+			border: solid 3px gray;
+			border-radius: 25%;
+		}
+		input:hover {
+  			
+  			background-color: black;
+  			color: white;
+			}
+		.dark-mode {
+  			background-color: black;
+  			color: white;
+
+
+  			
+  			border-radius:20%;
+  				}
+	</style>
+</head>
+<body>
+<div id ='container' >
+</div>
+	<button class="dark-mode" onclick="myFunction()"> Dark Mode</button>
+
+</body>
+</html>
+<script type="text/javascript">
+	var myContainer=document.getElementById('container');
+	console.log(container);
+	for(var i=0;i<9;i++)
+	{
+		for(var j=0;j<9;j++){
+		console.log('hello from loop');
+		var myInput= document.createElement('input');
+		myInput.id=`${i}${j}`
+		var number=Math.ceil(Math.random()*9);
+		console.log(number)
+		myInput.value=number;
+		myContainer.appendChild(myInput);
+}
+}
+	function myFunction() {
+  	var element = document.body;
+  	element.classList.toggle("dark-mode");
+		}
+
+
+	
+</script>
+
