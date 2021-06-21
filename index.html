@@ -1,52 +1,76 @@
+/*Pradnya Gawai*/
 <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 	<style type="text/css">
 		body{
-			background-color: #Dcf7dc;
+			/*background-color: #Dcf7dc;*/
+						background-color:#afedea ;
+
 		}
 		#container
 		{
-			/*border: solid 1px green;*/
+			/*border: solid 1px green;*#3b2421*/
 			display: grid;
 			grid-template-columns: repeat(9,11%);
 			margin-left: 35%;
 			margin-right: 35%;
-			margin-top: 10%;
+			margin-top: 5%;
 		}
 		input
 		{
-			height:40px;
+			height:45px;
 			text-align: center;
 			font-size: 130%;
-			background-color: #6DDED8;
-			border: solid 3px gray;
-			border-radius: 25%;
+			background-color:white ;
+			color: black;
+			border: solid 1.5px gray;
+			border-radius: 15%;*/
 		}
 		input:hover {
   			
-  			background-color: black;
+  			background-color:#82bd91;
   			color: white;
+  			font-size: 200%;
+
+
 			}
-		.dark-mode {
+			h1
+			{
+				text-align: center;
+				font-family: 'Poppins',san-serif;
+				color: #049184;
+
+  				
+			}
+			.dark-mode {
   			background-color: black;
   			color: white;
-
-
-  			
-  			border-radius:20%;
+  			height: 30px;
+			border-radius:20%;
   				}
-	</style>
+				</style>
+
 </head>
 <body>
+	<h1><strong>Sudoku Puzzel</strong>	<button class="dark-mode" onclick="myFunction()"> Dark Mode</button>
+<span></span>
+	</h1>
+
 <div id ='container' >
 </div>
-	<button class="dark-mode" onclick="myFunction()"> Dark Mode</button>
+
 
 </body>
 </html>
 <script type="text/javascript">
+	var sudoku=[[],[],[],[],[],[],[],[],[]]
+
+	function createGrid(){
 	var myContainer=document.getElementById('container');
 	console.log(container);
 	for(var i=0;i<9;i++)
@@ -57,16 +81,123 @@
 		myInput.id=`${i}${j}`
 		var number=Math.ceil(Math.random()*9);
 		console.log(number)
-		myInput.value=number;
+		//myInput.value=number;
+		myInput.row=i;
+		myInput.col=j;
+		//fix repitaion
+		//isSafe is funtion checking nymber repated or not
+		if(isSafe(sudoku,i,j,number))
+
+		{
+			// add the noumber to html
+			myInput.value=number;
+			myInput.readOnly=true;
+		}
+		else{
+			//keep empty
+			number=0;
+			myInput.value=''
+		}
+		sudoku[i][j]=number;
+
+		console.log(sudoku[i][j]);
 		myContainer.appendChild(myInput);
+		myInput.oninput=function(e)
+
+		{
+
+			checkAnswer(sudoku,e)
+			
+		}}
 }
 }
+createGrid();
+	function isSafe(grid,row,col,num)
+		{
+			for(var x=0;x<9;x++)
+			{
+				if(grid[row][x]==num)
+				{
+					return false
+				}
+			}
+			for(var y=0;y<9;y++)
+			{
+				if(grid[y][col]==num)
+				{
+					return false
+				}
+			}
+			var startRow=row-(row%3);
+			var startCol=col-(col%3);
+			for(var m=0;m<3;m++)
+			{
+				for(var n=0;n<3;n++)
+				{
+					if(grid[m+startRow][n+startCol]==num){
+
+						return false
+
+					}
+				}
+			}
+			return true}
+	function checkAnswer(grid,e){
+			var row=e.target.row
+			var col=e.target.col
+			var num =Number (e.data)
+			var id=e.target.id
+			if(num=='')
+			{
+				return false
+			}
+			else{
+		
+			for(var x=0;x<9;x++)
+			{
+				if(grid[row][x]==num)
+				{
+					showColors('red',id)
+					return false
+				}
+			}
+			for(var y=0;y<9;y++)
+			{
+				if(grid[y][col]==num)
+				{
+					showColors('red',id)
+					return false
+				}
+			}
+			var startRow=row-(row%3);
+			var startCol=col-(col%3);
+			for(var m=0;m<3;m++)
+			{
+				for(var n=0;n<3;n++)
+				{
+					if(grid[m+startRow][n+startCol]==num){
+						showColors('red',id)
+
+						return false
+
+					}
+				}
+			}
+		}
+		showColors('green',id)
+			return true
+
+	}
+	function showColors(color,id)
+		{var inp=document.getElementById(id)
+			if(color=='red')
+			{inp.style.backgroundColor='red';}
+			else{
+				inp.style.backgroundColor='green';}
+		}
 	function myFunction() {
   	var element = document.body;
   	element.classList.toggle("dark-mode");
 		}
-
-
-	
 </script>
 
