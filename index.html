@@ -150,6 +150,10 @@
   </div>
 
 <script>
+  window.onload = function () {
+  createGrid();
+};
+
   var sudoku = [[], [], [], [], [], [], [], [], []];
   myInput.oninput = function (e) {
   const messageEl = document.getElementById("message");
