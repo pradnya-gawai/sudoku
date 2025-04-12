@@ -1,203 +1,291 @@
-/*Pradnya Gawai*/
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title></title>
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Sudoku Puzzle | Play & Train</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f1f5f9);
+    }
 
-	<style type="text/css">
-		body{
-			/*background-color: #Dcf7dc;*/
-						background-color:#afedea ;
+    header {
+      text-align: center;
+      padding: 30px 0 15px;
+    }
 
-		}
-		#container
-		{
-			/*border: solid 1px green;*#3b2421*/
-			display: grid;
-			grid-template-columns: repeat(9,11%);
-			margin-left: 35%;
-			margin-right: 35%;
-			margin-top: 5%;
-		}
-		input
-		{
-			height:45px;
-			text-align: center;
-			font-size: 130%;
-			background-color:white ;
-			color: black;
-			border: solid 1.5px gray;
-			border-radius: 15%;*/
-		}
-		input:hover {
-  			
-  			background-color:#82bd91;
-  			color: white;
-  			font-size: 200%;
+    header h1 {
+      color: #0f172a;
+      font-size: 2.8rem;
+      margin: 0;
+    }
 
+    header p {
+      color: #475569;
+      font-size: 1.1rem;
+      margin: 8px 0 0;
+    }
 
-			}
-			h1
-			{
-				text-align: center;
-				font-family: 'Poppins',san-serif;
-				color: #049184;
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
 
-  				
-			}
-			.dark-mode {
-  			background-color: black;
-  			color: white;
-  			height: 30px;
-			border-radius:20%;
-  				}
-				</style>
+    .controls button {
+      background-color: #6366f1;
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
+    .controls button:hover {
+      background-color: #4f46e5;
+      transform: scale(1.05);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    .color-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+    }
+
+    .green {
+      background-color: #4ade80;
+    }
+
+    .red {
+      background-color: #f87171;
+    }
+
+    #container {
+      display: grid;
+      grid-template-columns: repeat(9, 55px);
+      grid-gap: 10px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    input {
+      width: 55px;
+      height: 55px;
+      text-align: center;
+      font-size: 1.4rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      background-color: #ffffff;
+      color: #334155;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input:read-only {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    input:hover {
+      background-color: #e2e8f0;
+      border-color: #94a3b8;
+      transform: scale(1.05);
+    }
+
+    .dark-mode {
+      background-color: #0f172a;
+      color: #f1f5f9;
+    }
+  </style>
 </head>
 <body>
-	<h1><strong>Sudoku Puzzel</strong>	<button class="dark-mode" onclick="myFunction()"> Dark Mode</button>
-<span></span>
-	</h1>
+  <header>
+    <h1>Sudoku Puzzle</h1>
+    <p>Test your brain, improve your logic, and enjoy!</p>
+  </header>
 
-<div id ='container' >
-</div>
+  <div class="controls">
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button onclick="createNewPuzzle()">New Puzzle</button>
+  </div>
 
+  <div class="legend">
+    <div class="legend-item">
+      <div class="color-box green"></div> Correct Move
+    </div>
+    <div class="legend-item">
+      <div class="color-box red"></div> Wrong Move
+    </div>
+  </div>
+
+  <div id="container">
+    <p id="message" style="text-align:center; color:#f43f5e; font-size:1rem; margin-top:10px;"></p>
+
+  </div>
+
+<script>
+  var sudoku = [[], [], [], [], [], [], [], [], []];
+  myInput.oninput = function (e) {
+  const messageEl = document.getElementById("message");
+  // Remove any invalid characters
+  if (e.target.value.length > 1 || e.target.value.match(/[^1-9]/)) {
+    e.target.value = '';
+    messageEl.textContent = 'Please enter a number between 1 and 9 only.';
+  } else if (e.target.value !== '') {
+    messageEl.textContent = '';
+    checkAnswer(sudoku, e);
+  } else {
+    resetInput(e.target);
+    messageEl.textContent = '';
+  }
+};
+
+
+  function createGrid() {
+    var myContainer = document.getElementById('container');
+    myContainer.innerHTML = '';
+    for (var i = 0; i < 9; i++) {
+      for (var j = 0; j < 9; j++) {
+        var myInput = document.createElement('input');
+        myInput.id = `${i}${j}`;
+        var number = Math.ceil(Math.random() * 9);
+        myInput.row = i;
+        myInput.col = j;
+        if (isSafe(sudoku, i, j, number)) {
+          myInput.value = number;
+          myInput.readOnly = true;
+        } else {
+          number = 0;
+          myInput.value = '';
+        }
+        sudoku[i][j] = number;
+
+        // Allow only 1-9 keys
+        myInput.onkeypress = function (e) {
+          if (e.which < 49 || e.which > 57) {
+            e.preventDefault();
+          }
+        };
+
+        myInput.oninput = function (e) {
+          // Remove any invalid characters
+          if (e.target.value.length > 1 || e.target.value.match(/[^1-9]/)) {
+            e.target.value = '';
+          }
+          if (e.target.value !== '') {
+            checkAnswer(sudoku, e);
+          } else {
+            resetInput(e.target);
+          }
+        };
+
+        myContainer.appendChild(myInput);
+      }
+    }
+  }
+
+  function isSafe(grid, row, col, num) {
+    for (var x = 0; x < 9; x++) {
+      if (grid[row][x] == num || grid[x][col] == num) return false;
+    }
+    var startRow = row - (row % 3);
+    var startCol = col - (col % 3);
+    for (var m = 0; m < 3; m++) {
+      for (var n = 0; n < 3; n++) {
+        if (grid[m + startRow][n + startCol] == num) return false;
+      }
+    }
+    return true;
+  }
+
+  function checkAnswer(grid, e) {
+    var row = e.target.row;
+    var col = e.target.col;
+    var num = Number(e.target.value);
+    var id = e.target.id;
+
+    for (var x = 0; x < 9; x++) {
+      if (grid[row][x] == num) {
+        showColors('wrong', id);
+        return;
+      }
+    }
+    for (var y = 0; y < 9; y++) {
+      if (grid[y][col] == num) {
+        showColors('wrong', id);
+        return;
+      }
+    }
+    var startRow = row - (row % 3);
+    var startCol = col - (col % 3);
+    for (var m = 0; m < 3; m++) {
+      for (var n = 0; n < 3; n++) {
+        if (grid[m + startRow][n + startCol] == num) {
+          showColors('wrong', id);
+          return;
+        }
+      }
+    }
+    showColors('correct', id);
+  }
+
+  function showColors(state, id) {
+    var inp = document.getElementById(id);
+    if (state == 'wrong') {
+      inp.style.backgroundColor = '#f87171';
+      inp.style.color = '#fff';
+    } else {
+      inp.style.backgroundColor = '#4ade80';
+      inp.style.color = '#fff';
+    }
+  }
+
+  function resetInput(input) {
+    input.style.backgroundColor = '#ffffff';
+    input.style.color = '#334155';
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach(inp => {
+      inp.classList.toggle("dark-mode");
+    });
+  }
+
+  function createNewPuzzle() {
+    sudoku = [[], [], [], [], [], [], [], [], []];
+    createGrid();
+  }
+
+  createGrid();
+</script>
 
 </body>
 </html>
-<script type="text/javascript">
-	var sudoku=[[],[],[],[],[],[],[],[],[]]
-
-	function createGrid(){
-	var myContainer=document.getElementById('container');
-	console.log(container);
-	for(var i=0;i<9;i++)
-	{
-		for(var j=0;j<9;j++){
-		console.log('hello from loop');
-		var myInput= document.createElement('input');
-		myInput.id=`${i}${j}`
-		var number=Math.ceil(Math.random()*9);
-		console.log(number)
-		//myInput.value=number;
-		myInput.row=i;
-		myInput.col=j;
-		//fix repitaion
-		//isSafe is funtion checking nymber repated or not
-		if(isSafe(sudoku,i,j,number))
-
-		{
-			// add the noumber to html
-			myInput.value=number;
-			myInput.readOnly=true;
-		}
-		else{
-			//keep empty
-			number=0;
-			myInput.value=''
-		}
-		sudoku[i][j]=number;
-
-		console.log(sudoku[i][j]);
-		myContainer.appendChild(myInput);
-		myInput.oninput=function(e)
-
-		{
-
-			checkAnswer(sudoku,e)
-			
-		}}
-}
-}
-createGrid();
-	function isSafe(grid,row,col,num)
-		{
-			for(var x=0;x<9;x++)
-			{
-				if(grid[row][x]==num)
-				{
-					return false
-				}
-			}
-			for(var y=0;y<9;y++)
-			{
-				if(grid[y][col]==num)
-				{
-					return false
-				}
-			}
-			var startRow=row-(row%3);
-			var startCol=col-(col%3);
-			for(var m=0;m<3;m++)
-			{
-				for(var n=0;n<3;n++)
-				{
-					if(grid[m+startRow][n+startCol]==num){
-
-						return false
-
-					}
-				}
-			}
-			return true}
-	function checkAnswer(grid,e){
-			var row=e.target.row
-			var col=e.target.col
-			var num =Number (e.data)
-			var id=e.target.id
-			if(num=='')
-			{
-				return false
-			}
-			else{
-		
-			for(var x=0;x<9;x++)
-			{
-				if(grid[row][x]==num)
-				{
-					showColors('red',id)
-					return false
-				}
-			}
-			for(var y=0;y<9;y++)
-			{
-				if(grid[y][col]==num)
-				{
-					showColors('red',id)
-					return false
-				}
-			}
-			var startRow=row-(row%3);
-			var startCol=col-(col%3);
-			for(var m=0;m<3;m++)
-			{
-				for(var n=0;n<3;n++)
-				{
-					if(grid[m+startRow][n+startCol]==num){
-						showColors('red',id)
-
-						return false
-
-					}
-				}
-			}
-		}
-		showColors('green',id)
-			return true
-
-	}
-	function showColors(color,id)
-		{var inp=document.getElementById(id)
-			if(color=='red')
-			{inp.style.backgroundColor='red';}
-			else{
-				inp.style.backgroundColor='green';}
-		}
-	function myFunction() {
-  	var element = document.body;
-  	element.classList.toggle("dark-mode");
-		}
-</script>
-
